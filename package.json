@@ -1,0 +1,13 @@
+{
+  "name": "frontend-image-compress",
+  "version": "1.0.0",
+  "description": "compress image-type file in frontend using canvas",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "keywords": ["image-compress","canvas","file-compress","frontend-compress"],
+  "author": "xhmm",
+  "license": "MIT",
+  "repository":"https://github.com/XHMM/frontend-image-compress"
+}
