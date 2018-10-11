@@ -1,6 +1,6 @@
 {
   "name": "frontend-image-compress",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "compress image-type file in frontend using canvas",
   "main": "index.js",
   "scripts": {

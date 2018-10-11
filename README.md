@@ -2,10 +2,10 @@ A simple tool using canvas to compress image file.
 
 ## API
 ### compressImageFile(params, callback):void
-name | type |signature
----|--- |---
-params | object | { file:File, quality:number }
-callback | function | (err:Error, file:File)=>void
+name | type |signature | ps
+---|--- |--- | ---
+params | object | { file:File, quality:number } | `quality` range: 0~1
+callback | function | (err:Error, file:File)=>void | one of `err` and `file` is always `null`
 
 ## Example
 Below example is from `test.html`，you can download this repo and open `test.html` directly to hava a try.
