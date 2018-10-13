@@ -1,32 +1,34 @@
-function compressImageFile(_a, callback) {
-    var file = _a.file, _b = _a.quality, quality = _b === void 0 ? 0.92 : _b;
-    if (file.type.startsWith('image')) {
-        if (file.type.match(/jpeg|png/)) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                var dataURL = this.result;
-                var img = new Image();
-                img.onload = function () {
-                    var width = img.width, height = img.height;
-                    var $canvas = document.createElement('canvas');
-                    $canvas.width = width;
-                    $canvas.height = height;
-                    var ctx = $canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    var newDataURL = $canvas.toDataURL('image/jpeg', quality);
-                    callback(null, dataURLtoFile(newDataURL, file.name));
+function compressImageFile(file, quality) {
+    if (quality === void 0) { quality = 0.92; }
+    return new Promise(function (resolve, reject) {
+        if (file.type.startsWith('image')) {
+            if (file.type.match(/jpeg|png/)) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var dataURL = this.result;
+                    var img = new Image();
+                    img.onload = function () {
+                        var width = img.width, height = img.height;
+                        var $canvas = document.createElement('canvas');
+                        $canvas.width = width;
+                        $canvas.height = height;
+                        var ctx = $canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        var newDataURL = $canvas.toDataURL('image/jpeg', quality);
+                        resolve(dataURLtoFile(newDataURL, file.name));
+                    };
+                    img.src = dataURL;
                 };
-                img.src = dataURL;
-            };
-            reader.readAsDataURL(file);
+                reader.readAsDataURL(file);
+            }
+            else {
+                reject(new Error('Only support jpeg, jpg, png type'));
+            }
         }
         else {
-            callback(new Error('Only support jpeg|jpg|png type'), null);
+            reject(new Error('Not support no-image type'));
         }
-    }
-    else {
-        callback(new Error('Not support no-image type'), null);
-    }
+    });
 }
 function dataURLtoFile(dataURL, filename) {
     var arr = dataURL.split(',');

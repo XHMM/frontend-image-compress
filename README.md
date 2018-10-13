@@ -1,28 +1,33 @@
 A simple tool using canvas to compress image file.
 
-## API
-### compressImageFile(params, callback):void
-name | type |signature | ps
----|--- |--- | ---
-params | object | { file:File, quality:number } | `quality` range: 0~1
-callback | function | (err:Error, file:File)=>void | one of `err` and `file` is always `null`
-
 ## Example
 Below example is from `test.html`，you can download this repo and open `test.html` directly to hava a try.
 ```html
 <input  type='file' id='test'/>
-<script src="./dist/frontend-compress.js"></script>
+<script src="./dist/frontend-compress.min.js"></script>
 <script>
   const $file = document.querySelector('#test');
-  $file.onchange = function(e) {
+  $file.onchange = async function(e) {
     const file = e.target.files[0];
-    compressImageFile({file, quality:0.5},(err, newFile) => {
-      if(err) alert(err.toString())
-      else alert(`original size: ${file.size}, compressed size: ${newFile.size}`)
+    compressImageFile(file,0.5).then(res=>{
+      alert(`original size: ${file.size}, compressed size: ${res.size}`)
+    }).catch(err=>{
+      alert(err.toString())
     })
   }
 </script>
 ```
+
+## CDN
+https://unpkg.com/frontend-image-compress@latest/dist/frontend-compress.min.js
+
+## API
+### compressImageFile(file, quality):Promise
+name | type  | ps
+---|---| ---
+file | File | from input[type="file"]
+quality | number |  range: 0~1, default is 0.92
+return | Promise<File> | compressed file
 
 ## Build
 Edit `src/frontend-compress.ts` and run `npm run build` to compile ts file

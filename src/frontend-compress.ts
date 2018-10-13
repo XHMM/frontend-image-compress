@@ -1,36 +1,33 @@
-interface CompressParams {
-  file:File
-  quality:number
-}
-
-function compressImageFile({file,quality=0.92}:CompressParams, callback:(err:Error,file:File)=>void) {
-  if(file.type.startsWith('image')) {
-    if(file.type.match(/jpeg|png/)) {
-      const reader = new FileReader()
-      reader.onload = function() {
-        const dataURL = this.result;
-        const img = new Image()
-        img.onload = function() {
-          const {width, height} = img
-          const $canvas = document.createElement('canvas');
-          $canvas.width = width
-          $canvas.height = height
-          const ctx = $canvas.getContext('2d')
-          ctx.drawImage(img,0,0)
-          const newDataURL = $canvas.toDataURL('image/jpeg', quality);
-          callback(null, dataURLtoFile(newDataURL,file.name))
+function compressImageFile(file:File,quality=0.92):Promise<File> {
+  return new Promise((resolve, reject) => {
+    if(file.type.startsWith('image')) {
+      if(file.type.match(/jpeg|png/)) {
+        const reader = new FileReader()
+        reader.onload = function() {
+          const dataURL = this.result;
+          const img = new Image()
+          img.onload = function() {
+            const {width, height} = img
+            const $canvas = document.createElement('canvas');
+            $canvas.width = width
+            $canvas.height = height
+            const ctx = $canvas.getContext('2d')
+            ctx.drawImage(img,0,0)
+            const newDataURL = $canvas.toDataURL('image/jpeg', quality);
+            resolve(dataURLtoFile(newDataURL,file.name))
+          }
+          img.src = dataURL as string;
         }
-        img.src = dataURL as string;
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
+      else {
+        reject(new Error('Only support jpeg, jpg, png type'))
+      }
     }
     else {
-      callback(new Error('Only support jpeg|jpg|png type'), null)
+      reject(new Error('Not support no-image type'))
     }
-  }
-  else {
-    callback(new Error('Not support no-image type'), null)
-  }
+  })
 }
 function dataURLtoFile(dataURL:string, filename:string):File {
   const arr = dataURL.split(',')
