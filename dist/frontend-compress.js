@@ -118,65 +118,86 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"frontend-compress.ts":[function(require,module,exports) {
-"use strict";
+var define;
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function compressImageFile(file, quality) {
-  if (quality === void 0) {
-    quality = 0.92;
+(function (factory) {
+  if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
+    var v = factory(require, exports);
+    if (v !== undefined) module.exports = v;
+  } else if (typeof define === "function" && define.amd) {
+    define(["require", "exports"], factory);
   }
+})(function (require, exports) {
+  "use strict";
 
-  return new Promise(function (resolve, reject) {
-    if (file.type.startsWith('image')) {
-      if (file.type.match(/jpeg|png/)) {
-        var reader = new FileReader();
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-        reader.onload = function () {
-          var dataURL = this.result;
-          var img = new Image();
+  function compressImageFile(file, quality) {
+    if (quality === void 0) {
+      quality = 0.92;
+    }
 
-          img.onload = function () {
-            var width = img.width,
-                height = img.height;
-            var $canvas = document.createElement('canvas');
-            $canvas.width = width;
-            $canvas.height = height;
-            var ctx = $canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            var newDataURL = $canvas.toDataURL('image/jpeg', quality);
-            resolve(dataURLtoFile(newDataURL, file.name));
+    var oldFileSize = file.size;
+    return new Promise(function (resolve, reject) {
+      if (file.type.startsWith('image')) {
+        if (file.type.match(/jpeg|png/)) {
+          var reader = new FileReader();
+
+          reader.onload = function () {
+            var dataURL = this.result;
+            var img = new Image();
+
+            img.onload = function () {
+              var width = img.width,
+                  height = img.height;
+              var $canvas = document.createElement('canvas');
+              $canvas.width = width;
+              $canvas.height = height;
+              var ctx = $canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0);
+              var newDataURL = $canvas.toDataURL('image/jpeg', quality);
+              var newFile = dataURLtoFile(newDataURL, file.name);
+              var newFileSize = newFile.size; // @ts-ignore
+
+              var compressRate = ((oldFileSize - newFileSize) / oldFileSize).toFixed(2) * 100;
+              console.log("oldFile: " + oldFileSize + "byte\nnewFile: " + newFileSize + "byte\ncompressRate: " + compressRate + "%");
+              if (newFile.size < oldFileSize) resolve(newFile);else {
+                console.warn('file size became bigger after compress, so origin file returned.');
+                resolve(file);
+              }
+            };
+
+            img.src = dataURL;
           };
 
-          img.src = dataURL;
-        };
-
-        reader.readAsDataURL(file);
+          reader.readAsDataURL(file);
+        } else {
+          reject(new Error('Only support jpeg, jpg, png type'));
+        }
       } else {
-        reject(new Error('Only support jpeg, jpg, png type'));
+        reject(new Error('Not support no-image type'));
       }
-    } else {
-      reject(new Error('Not support no-image type'));
-    }
-  });
-}
+    });
+  }
 
-exports.compressImageFile = compressImageFile;
+  exports.compressImageFile = compressImageFile;
 
-function dataURLtoFile(dataURL, filename) {
-  var arr = dataURL.split(',');
-  var type = arr[0].match(/:(.*?);/)[1];
-  var data = atob(arr[1]);
-  var u8arr = new Uint8Array(data.length);
-  u8arr.forEach(function (item, idx) {
-    item = data[idx].charCodeAt(0);
-  });
-  return new File([u8arr], filename, {
-    type: type
-  });
-}
+  function dataURLtoFile(dataURL, filename) {
+    var arr = dataURL.split(',');
+    var type = arr[0].match(/:(.*?);/)[1];
+    var data = atob(arr[1]);
+    var u8arr = new Uint8Array(data.length);
+    u8arr.forEach(function (item, idx) {
+      item = data[idx].charCodeAt(0);
+    });
+    return new File([u8arr], filename, {
+      type: type
+    });
+  }
+});
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -205,7 +226,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56393" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63430" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,4 +1,6 @@
-function compressImageFile(file:File,quality=0.92):Promise<File> {
+function compressImageFile(file:File,quality=0.8):Promise<File> {
+  const oldFileSize = file.size;
+
   return new Promise((resolve, reject) => {
     if(file.type.startsWith('image')) {
       if(file.type.match(/jpeg|png/)) {
@@ -14,7 +16,17 @@ function compressImageFile(file:File,quality=0.92):Promise<File> {
             const ctx = $canvas.getContext('2d')
             ctx.drawImage(img,0,0)
             const newDataURL = $canvas.toDataURL('image/jpeg', quality);
-            resolve(dataURLtoFile(newDataURL,file.name))
+            const newFile = dataURLtoFile(newDataURL,file.name);
+            const newFileSize = newFile.size;
+            // @ts-ignore
+            const compressRate = ((oldFileSize - newFileSize) / oldFileSize).toFixed(2)*100;
+            console.log(`oldFile: ${oldFileSize}byte\nnewFile: ${newFileSize}byte\ncompressRate: ${compressRate}%`)
+            if(newFile.size<oldFileSize)
+              resolve(newFile)
+            else {
+              console.warn('file size became bigger after compress, so origin file returned.')
+              resolve(file)
+            }
           }
           img.src = dataURL as string;
         }

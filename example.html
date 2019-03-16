@@ -6,14 +6,13 @@
 </head>
 <body>
 <input  type='file' id='test'/>
-<script src="./dist/frontend-compress.min.js"></script>
+<script src="./dist/frontend-compress.js"></script>
 <script>
   const $file = document.querySelector('#test');
   $file.onchange = async function(e) {
     const file = e.target.files[0];
-    window.Compress.compressImageFile(file,0.5).then(res=>{
-      const rate = ((file.size - res.size) / file.size).toFixed(2)*100;
-      alert(`original size: ${file.size} byte, compressed size: ${res.size} byte, rate: ${rate}%`)
+    window.Compress.compressImageFile(file).then(res=>{
+
     }).catch(err=>{
       alert(err.toString())
     })
