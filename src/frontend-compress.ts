@@ -39,3 +39,5 @@ function dataURLtoFile(dataURL:string, filename:string):File {
   })
   return new File([u8arr], filename, {type:type});
 }
+
+export  {compressImageFile}
