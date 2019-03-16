@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "description": "compress image-type file in frontend using canvas",
   "main": "./dist/frontend-compress.js",
+  "typings": "./index.d.ts",
   "scripts": {
     "watch": "parcel watch ./src/frontend-compress.ts --global Compress --no-source-maps",
     "build": "parcel build ./src/frontend-compress.ts --global Compress --out-file frontend-compress.min.js --no-source-maps"
