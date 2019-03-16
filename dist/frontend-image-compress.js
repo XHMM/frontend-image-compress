@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"frontend-compress.ts":[function(require,module,exports) {
+})({"frontend-image-compress.ts":[function(require,module,exports) {
 var define;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -137,7 +137,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
   function compressImageFile(file, quality) {
     if (quality === void 0) {
-      quality = 0.92;
+      quality = 0.7;
     }
 
     var oldFileSize = file.size;
@@ -147,7 +147,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           var reader = new FileReader();
 
           reader.onload = function () {
-            var dataURL = this.result;
+            var oldDataURL = this.result;
             var img = new Image();
 
             img.onload = function () {
@@ -158,19 +158,26 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               $canvas.height = height;
               var ctx = $canvas.getContext('2d');
               ctx.drawImage(img, 0, 0);
-              var newDataURL = $canvas.toDataURL('image/jpeg', quality);
-              var newFile = dataURLtoFile(newDataURL, file.name);
-              var newFileSize = newFile.size; // @ts-ignore
+              $canvas.toBlob(function (blob) {
+                var newFile = blob;
+                newFile.lastModified = file.lastModified;
+                newFile.name = file.name;
+                var newFileSize = newFile.size; // @ts-ignore
 
-              var compressRate = ((oldFileSize - newFileSize) / oldFileSize).toFixed(2) * 100;
-              console.log("oldFile: " + oldFileSize + "byte\nnewFile: " + newFileSize + "byte\ncompressRate: " + compressRate + "%");
-              if (newFile.size < oldFileSize) resolve(newFile);else {
-                console.warn('file size became bigger after compress, so origin file returned.');
-                resolve(file);
-              }
+                var compressRate = ((oldFileSize - newFileSize) / oldFileSize).toFixed(2) * 100;
+                console.log("oldFile: " + oldFileSize + "byte\nnewFile: " + newFileSize + "byte\ncompressRate: " + compressRate + "%");
+                if (newFile.size < oldFileSize) resolve(newFile);else {
+                  console.warn('original image size >= compressed image size, so original image returned.');
+                  resolve(file);
+                }
+              }, file.type, quality);
             };
 
-            img.src = dataURL;
+            img.onerror = function () {
+              console.log('img onerror');
+            };
+
+            img.src = oldDataURL;
           };
 
           reader.readAsDataURL(file);
@@ -184,19 +191,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   }
 
   exports.compressImageFile = compressImageFile;
-
-  function dataURLtoFile(dataURL, filename) {
-    var arr = dataURL.split(',');
-    var type = arr[0].match(/:(.*?);/)[1];
-    var data = atob(arr[1]);
-    var u8arr = new Uint8Array(data.length);
-    u8arr.forEach(function (item, idx) {
-      item = data[idx].charCodeAt(0);
-    });
-    return new File([u8arr], filename, {
-      type: type
-    });
-  }
 });
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -226,7 +220,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63430" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65207" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -401,4 +395,4 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","frontend-compress.ts"], "Compress")
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","frontend-image-compress.ts"], "Compress")
