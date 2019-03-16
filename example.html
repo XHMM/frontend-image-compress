@@ -11,8 +11,9 @@
   const $file = document.querySelector('#test');
   $file.onchange = async function(e) {
     const file = e.target.files[0];
-    compressImageFile(file,0.5).then(res=>{
-      alert(`original size: ${file.size}, compressed size: ${res.size}`)
+    window.Compress.compressImageFile(file,0.5).then(res=>{
+      const rate = ((file.size - res.size) / file.size).toFixed(2)*100;
+      alert(`original size: ${file.size} byte, compressed size: ${res.size} byte, rate: ${rate}%`)
     }).catch(err=>{
       alert(err.toString())
     })
