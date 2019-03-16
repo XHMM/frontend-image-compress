@@ -1,12 +1,12 @@
 {
-  "name": "frontend-compress",
+  "name": "frontend-image-compress",
   "version": "3.0.0",
   "description": "compress image-type file in frontend using canvas",
-  "main": "./dist/frontend-compress.js",
+  "main": "./dist/frontend-image-compress.js",
   "typings": "./index.d.ts",
   "scripts": {
-    "watch": "parcel watch ./src/frontend-compress.ts --global Compress --no-source-maps",
-    "build": "parcel build ./src/frontend-compress.ts --global Compress --out-file frontend-compress.min.js --no-source-maps",
+    "watch": "parcel watch ./src/frontend-image-compress.ts --global Compress --no-source-maps",
+    "build": "parcel build ./src/frontend-image-compress.ts --global Compress --out-file frontend-image-compress.min.js --no-source-maps",
     "def": "cd dist && tsc"
   },
   "keywords": [
