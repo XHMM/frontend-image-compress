@@ -28,12 +28,8 @@ https://unpkg.com/frontend-image-compress@latest/dist/frontend-compress.min.js
 name | type  | ps
 ---|---| ---
 file | File | from input[type="file"]
-quality | number |  range: 0~1, default is 0.92
+quality | number |  range: 0~1, default is 0.8
 return | Promise\<File\> | compressed file
-
-## Build
-1. `yarn install` or `npm install`
-2. Edit `src/frontend-compress.ts` and run `npm run build` or `yarn run build` to compile ts file
 
 ## Changelog
 1. 2019-03-16 `3.0.0`：
