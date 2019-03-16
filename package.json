@@ -1,5 +1,5 @@
 {
-  "name": "frontend-image-compress",
+  "name": "frontend-compress",
   "version": "3.0.0",
   "description": "compress image-type file in frontend using canvas",
   "main": "./dist/frontend-compress.js",
