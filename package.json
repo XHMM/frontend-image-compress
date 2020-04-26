@@ -1,13 +1,14 @@
 {
   "name": "frontend-image-compress",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "compress image-type file in frontend using canvas",
-  "main": "./dist/frontend-image-compress.js",
+  "main": "./dist/index.js",
   "typings": "./index.d.ts",
   "scripts": {
-    "watch": "parcel watch ./src/frontend-image-compress.ts --global Compress --no-source-maps",
-    "build": "parcel build ./src/frontend-image-compress.ts --global Compress --out-file frontend-image-compress.min.js --no-source-maps",
-    "def": "cd dist && tsc"
+    "watch": "parcel watch src/index.ts --global Compress --no-source-maps",
+    "build": "parcel build src/index.ts --global Compress --out-file index.min.js --no-source-maps",
+    "tsc": "tsc",
+    "prepublishOnly": "rimraf dist && npm run build && npm run tsc"
   },
   "keywords": [
     "image-compress",
@@ -19,7 +20,8 @@
   "license": "MIT",
   "repository": "https://github.com/XHMM/frontend-image-compress",
   "devDependencies": {
-    "parcel-bundler": "^1.12.2",
-    "typescript": "3.2.1"
+    "parcel-bundler": "^1.12.4",
+    "typescript": "3.8.3",
+    "rimraf": "^3.0.2"
   }
 }

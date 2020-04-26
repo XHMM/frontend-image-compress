@@ -6,13 +6,13 @@
 </head>
 <body>
 <input  type='file' id='test'/>
-<script src="./dist/frontend-image-compress.js"></script>
+<script src="./dist/index.min.js"></script>
 <script>
   const $file = document.querySelector('#test');
   $file.onchange = async function(e) {
     const file = e.target.files[0];
     window.Compress.compressImageFile(file).then(res=>{
-
+      console.log(res);
     }).catch(err=>{
       alert(err.toString())
     })

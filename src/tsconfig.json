@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "es5",
-    "module": "umd",
-    "lib": ["dom","es5","es6"]
-  },
-  "include": ["./frontend-image-compress.ts"]
-}
